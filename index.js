@@ -80,23 +80,16 @@ app.post('/api/login', async (req, res) => {
 })
 
 app.get('/api/profile', (req, res) => {
+  
   const { token } = req.cookies;
-
-  if (!token) {
-    return res.status(401).json({ error: 'JWT not provided' });
-  }
-
+  console.log(req.cookies);
   jwt.verify(token, secret, {}, (err, info) => {
-    if (err) {
-      console.error('JWT Verification Error:', err.message);
-      return res.status(401).json({ error: 'Invalid JWT' });
-    }
-
-    console.log('Decoded JWT:', info);
+    if (err) throw err;
+    console.log(info)
     res.json(info);
   });
-});
 
+});
 
 app.get('/api/logout', (req, res) => {
   res.cookie('token', '').json('ok');
