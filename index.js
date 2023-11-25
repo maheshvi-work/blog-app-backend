@@ -17,7 +17,7 @@ const uploadMiddleware = multer({ dest: 'uploads/', limits: { fieldSize: 2 * 102
 const fs = require('fs');
 
 
-app.use(cors({ credentials: true, origin: ['http://localhost:3000', 'http://localhost:3001'] }));
+app.use(cors({ credentials: true, origin: '*' }));
 app.use(express.json());
 app.use(cookieParser());
 const MONGO_DB_URI = 'Your Mongo db URI'
@@ -27,7 +27,7 @@ app.use('/files', express.static(__dirname + '/files'))
 mongoose.connect('mongodb+srv://blog:blog@cluster0.rhiwtrd.mongodb.net/?retryWrites=true&w=majority')
 
 
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -46,7 +46,7 @@ app.post('/register', async (req, res) => {
 })
 
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   
   try {
@@ -79,7 +79,7 @@ app.post('/login', async (req, res) => {
 
 })
 
-app.get('/profile', (req, res) => {
+app.get('/api/profile', (req, res) => {
   
   const { token } = req.cookies;
   console.log(req.cookies);
@@ -91,12 +91,12 @@ app.get('/profile', (req, res) => {
 
 });
 
-app.get('/logout', (req, res) => {
+app.get('/api/logout', (req, res) => {
   res.cookie('token', '').json('ok');
  
 });
 
-app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
+app.post('/api/post', uploadMiddleware.single('file'), async (req, res) => {
   const { originalname, path } = req.file;
   const parts = originalname.split('.');
   const ext = parts[parts.length - 1];
@@ -125,7 +125,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 });
 
 
-app.get('/post', async (req, res) => {
+app.get('/api/post', async (req, res) => {
 
   res.json(
     await Post.find()
@@ -137,7 +137,7 @@ app.get('/post', async (req, res) => {
 }
 );
 
-app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
+app.put('/api/post', uploadMiddleware.single('file'), async (req, res) => {
   let newPath = null;
   if (req.file) {
     const { originalname, path } = req.file;
@@ -169,7 +169,7 @@ app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
 });
 
 
-app.get('/post/:id', async (req, res) => {
+app.get('/api/post/:id', async (req, res) => {
   const { id } = req.params
   const postdoc = await Post.findById(id).populate('author', ['username']);
   res.json(postdoc);
@@ -179,7 +179,7 @@ app.get('/post/:id', async (req, res) => {
 );
 
 
-app.delete('/delete/:id', async (req, res) => {
+app.delete('/api/delete/:id', async (req, res) => {
   const { token } = req.cookies;
 
   jwt.verify(token, secret, {}, async (err, info) => {
@@ -213,7 +213,7 @@ app.delete('/delete/:id', async (req, res) => {
 }
 );
 
-app.get('/post/search/:query', async (req, res) => {
+app.get('/api/post/search/:query', async (req, res) => {
   const { query } = req.params;
   try {
     const searchResults = await Post.aggregate([
@@ -289,7 +289,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.post("/upload-files", upload.single("file"), async (req, res) => {
+app.post("/api/upload-files", upload.single("file"), async (req, res) => {
   const { token } = req.cookies;
   console.log(token)
 
@@ -309,7 +309,7 @@ app.post("/upload-files", upload.single("file"), async (req, res) => {
   }
 });
 
-app.get('/get-files/:id', async (req, res) => {
+app.get('/api/get-files/:id', async (req, res) => {
   const { id } = req.params
   const postdoc = await pdfDetails.findById(id);
   res.json(postdoc);
@@ -318,7 +318,7 @@ app.get('/get-files/:id', async (req, res) => {
 
 );
 
-app.get("/get-files", async (req, res) => {
+app.get("/api/get-files", async (req, res) => {
 
 
   try {
@@ -355,7 +355,7 @@ const editFileStorage = multer.diskStorage({
 
 const editFileUploadMiddleware = multer({ storage: editFileStorage });
 
-app.put('/file-edit', editFileUploadMiddleware.single('file'), async (req, res) => {
+app.put('/api/file-edit', editFileUploadMiddleware.single('file'), async (req, res) => {
   let newPath = null;
   if (req.file) {
     console.log(req.file);
@@ -375,7 +375,7 @@ app.put('/file-edit', editFileUploadMiddleware.single('file'), async (req, res) 
 });
 
 
-app.get('/delete/:id', async (req, res) => {
+app.get('/api/delete/:id', async (req, res) => {
   const pdfId = req.params.id;
   console.log("Deleting --> " + pdfId);
   try {
@@ -400,7 +400,7 @@ app.get('/', async (req, res) => {
 });
 
 
-app.get('/fileupload/search/:query', async (req, res) => {
+app.get('/api/fileupload/search/:query', async (req, res) => {
   const { query } = req.params;
   try {
     const filenameRegex = /(\d{13})(.*)/; 
@@ -440,7 +440,7 @@ app.get('/fileupload/search/:query', async (req, res) => {
 
 
 
-app.put("/update-access-level/:selectedFileId", async (req, res) => {
+app.put("/api/update-access-level/:selectedFileId", async (req, res) => {
   const { selectedFileId } = req.params; // Update the parameter name
   const { accesslevel } = req.body;
   
