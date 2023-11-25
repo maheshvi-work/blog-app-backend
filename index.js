@@ -20,11 +20,11 @@ const fs = require('fs');
 app.use(cors({ credentials: true, origin: ['http://localhost:3000', 'http://localhost:3001'] }));
 app.use(express.json());
 app.use(cookieParser());
-
+const MONGO_DB_URI = 'Your Mongo db URI'
 app.use('/uploads', express.static(__dirname + '/uploads'))
 
 app.use('/files', express.static(__dirname + '/files'))
-mongoose.connect(MONGO_DB_URI)
+mongoose.connect('mongodb+srv://blog:blog@cluster0.rhiwtrd.mongodb.net/?retryWrites=true&w=majority')
 
 
 app.post('/register', async (req, res) => {
