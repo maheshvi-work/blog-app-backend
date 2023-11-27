@@ -83,12 +83,12 @@ app.get('/api/profile', (req, res) => {
   const { token } = req.cookies;
 
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorized1' });
   }
 
   jwt.verify(token, secret, {}, (err, info) => {
     if (err) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      return res.status(401).json({ error: 'Unauthorized2' });
     }
     console.log(info);
     res.json(info);
