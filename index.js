@@ -16,16 +16,9 @@ const multer = require('multer');
 const uploadMiddleware = multer({ dest: 'uploads/', limits: { fieldSize: 2 * 1024 * 1024 } });
 const fs = require('fs');
 
-app.use((req, res, next) => {
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    return res.status(200).json({});
-  }
-  next();
-});
 
-app.use(cors({ credentials: true, origin: 'https://blog-app-frontend-mocha.vercel.app' }));
+
+app.use(cors({ credentials: true, origin: 'https://blog-app-frontend-mocha.*.app' }));
 app.use(express.json());
 app.use(cookieParser());
 const MONGO_DB_URI = 'Your Mongo db URI'
@@ -193,8 +186,6 @@ app.get('/api/post/:id', async (req, res) => {
 
 
 app.delete('/api/delete/:id', async (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://blog-app-frontend-mocha.vercel.app');
-  res.header('Access-Control-Allow-Credentials', true);
   const { token } = req.cookies;
 
   jwt.verify(token, secret, {}, async (err, info) => {
