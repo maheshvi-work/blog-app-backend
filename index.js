@@ -193,6 +193,8 @@ app.get('/api/post/:id', async (req, res) => {
 
 
 app.delete('/api/delete/:id', async (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://blog-app-frontend-mocha.vercel.app');
+  res.header('Access-Control-Allow-Credentials', true);
   const { token } = req.cookies;
 
   jwt.verify(token, secret, {}, async (err, info) => {
