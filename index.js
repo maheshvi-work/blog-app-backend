@@ -109,7 +109,7 @@ app.post('/api/post', uploadMiddleware.single('file'), async (req, res) => {
   fs.renameSync(path, newPath);
 
   const { token } = req.cookies;
-  jwt.verify(token, secret, {}, async (err, info) => {
+
     if (err) throw err;
 
     const { title, summary, content } = req.body;
@@ -122,7 +122,7 @@ app.post('/api/post', uploadMiddleware.single('file'), async (req, res) => {
     });
 
     res.json(postDoc);
-  });
+  
 
 
 
