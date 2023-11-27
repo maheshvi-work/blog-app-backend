@@ -20,7 +20,7 @@ const fs = require('fs');
 app.use(cors({ credentials: true, origin: 'https://blog-app-frontend-mocha.vercel.app' }));
 app.use(express.json());
 app.use(cookieParser());
-const MONGO_DB_URI = 'Your Mongo db URI'
+
 app.use('/uploads', express.static(__dirname + '/uploads'))
 
 app.use('/files', express.static(__dirname + '/files'))
