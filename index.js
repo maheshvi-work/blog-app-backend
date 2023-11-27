@@ -16,6 +16,14 @@ const multer = require('multer');
 const uploadMiddleware = multer({ dest: 'uploads/', limits: { fieldSize: 2 * 1024 * 1024 } });
 const fs = require('fs');
 
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    return res.status(200).json({});
+  }
+  next();
+});
 
 app.use(cors({ credentials: true, origin: 'https://blog-app-frontend-mocha.vercel.app' }));
 app.use(express.json());
