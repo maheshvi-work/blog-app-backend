@@ -18,7 +18,7 @@ const fs = require('fs');
 
 
 
-app.use(cors({ credentials: true, origin: 'https://blog-app-frontend-mocha.*.app' }));
+app.use(cors({ credentials: true, origin: 'https://blog-app-frontend-mocha.app' }));
 app.use(express.json());
 app.use(cookieParser());
 const MONGO_DB_URI = 'Your Mongo db URI'
